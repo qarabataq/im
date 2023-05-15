@@ -2,33 +2,245 @@
   <ion-page>
     <ion-header :translucent="true">
       <ion-toolbar>
-        <ion-title>Blank</ion-title>
+        <ion-title>i-frame</ion-title>
       </ion-toolbar>
     </ion-header>
-
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Blank</ion-title>
-        </ion-toolbar>
-      </ion-header>
-
-      <div id="container">
-        <strong>Ready to create an app?</strong>
-        <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+      <div style="margin:20xp;padding:20px;text-align: center;display: flex; align-items: center; justify-content: center;">
+        <ion-img src="/../assets/logo.png" style="width:50%;height: 50%;"></ion-img>
       </div>
+      
+      <!--
+      <v-row style="align-items: center;justify-content: center;">
+        <v-col cols="10" style="align-items: center;justify-content: center;">
+          <v-combobox
+            label="site"
+            :items="urls"
+            v-model="url"
+            clearable
+          ></v-combobox>
+        </v-col>
+      </v-row>
+      <v-row style="align-items: center;justify-content: center;">
+        <v-col cols="10" style="text-align:center;align-items: center;justify-content: center;">
+          <ion-button @click="onInput" size="small">Giriş</ion-button>
+        </v-col>
+      </v-row>
+
+      -->
+
+      <div v-if="items.length === 0" class="empty-list-message">
+        Bağlantı ekleyin
+      </div>
+      <ion-list v-else>
+        <ion-item-sliding v-for="(item, index) in items" :key="index">
+          <ion-item>
+            <ion-label>{{ item.site }}</ion-label>
+            <ion-button @click="connect(item)" fill="outline" size="small">
+              Bağlan
+            </ion-button>
+            <ion-button @click="testConnection(item)" color="secondary" fill="outline" size="small">
+              Test 
+            </ion-button>
+          </ion-item>
+          <ion-item-options side="end">
+            <ion-item-option color="warning" @click="editItem(item)">
+              <ion-icon :icon="createOutline"></ion-icon>
+              Düzenle
+            </ion-item-option>
+            <ion-item-option color="danger" @click="deleteItem(index)">
+              <ion-icon :icon="trashOutline"></ion-icon>
+              Sil
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button @click="addNewItem">
+          <ion-icon :icon="addOutline"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
     </ion-content>
+    <ion-modal :is-open="showModal" @dismiss="closeModal">
+      <new-item-form @submit="submitForm" @close="closeModal"></new-item-form>
+    </ion-modal>
   </ion-page>
 </template>
+<script lang="ts">
+import { Preferences } from '@capacitor/preferences';
+import {IonAlert,IonModal,IonFab,IonIcon,IonFabButton, IonList, IonItem,IonItemSliding,IonItemOption,IonItemOptions, IonContent, IonHeader, IonPage, IonTitle, IonToolbar,IonInput,IonButton,IonImg } from '@ionic/vue';
+import { defineComponent ,ref} from 'vue';
+import { addOutline,createOutline, trashOutline } from 'ionicons/icons';
+import NewItemForm from '@/components/NewItemForm.vue';
+import router from '@/router';
+interface Item {
+  site: string;
+  username: string;
+  password: string;
+}
 
-<script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+export default defineComponent({
+  name: 'HomePage',
+  components: {
+    IonAlert,
+    IonModal,
+    IonList,
+    IonItem,
+    IonItemSliding,
+    IonItemOption,
+    IonItemOptions,
+    IonContent,
+    IonHeader,
+    IonPage,
+    IonTitle,
+    IonToolbar,
+    IonInput,
+    IonButton,
+    IonImg,
+    IonFab,
+    IonFabButton,
+    IonIcon,
+    NewItemForm
+  },
+  setup(){
+    const items = ref<Item[]>([
+      { site: 'https://test.i-frame.io', username: 'user1', password: 'pass1' },
+      { site: 'https://bd.i-frame.io', username: 'user2', password: 'pass2' }
+    ]);
+    const editItem = (item: Item) => {
+      console.log('Düzenle:', item);
+    };
+
+    const deleteItem = (index: number) => {
+      items.value.splice(index, 1);
+    };
+    const connect = async (item: Item) => {
+      console.log('Bağlan:', item);
+      await Preferences.set({key:'url',value:item.site});
+      router.push('/iframe');
+
+    };
+
+    const testConnection = (item: Item) => {
+      console.log('Test Connection:', item);
+    };
+    const addNewItem = () => {
+      console.log('Yeni öğe ekle');
+      showModal.value = true;
+    };
+
+
+    const showModal = ref(false);
+
+
+    const closeModal = () => {
+      showModal.value = false;
+    };
+
+    const submitForm = (newItem: Item) => {
+      items.value.push(newItem);
+      closeModal();
+    };
+    const showDeleteConfirm = ref(false);
+    const deleteIndex = ref(-1);
+
+
+
+    return {
+      items,
+      editItem,
+      deleteItem,
+      connect,
+      testConnection,
+      addOutline,
+      trashOutline,
+      createOutline,
+      addNewItem,
+      showModal,
+      closeModal,
+      submitForm
+    };
+  },
+  data() {
+    return {
+      url: '',
+      urls: []
+    }
+  },
+  mounted() {
+        this.getPreferences();
+    },
+  methods: {
+    editItem(item:Item){
+        console.log(item);
+    },
+    deleteItem(item:Item){
+        console.log(item);
+    },
+    onInput() {
+      this.setPreferences();
+    },
+    async setPreferences()
+    {
+      if(this.url.toString().startsWith('https://') == false)
+      {
+        this.url = 'https://' + this.url;
+      }
+
+      await Preferences.set({key:'url',value:this.url});
+      var urls = await Preferences.get({key:'urls'});
+      console.log(urls.value);
+      if(urls.value == null)
+      {
+        this.urls = [];
+        this.urls.push(this.url);
+        await Preferences.set({key:'urls',value:JSON.stringify(this.urls)});
+      }
+      else
+      {
+        this.urls = JSON.parse(urls.value);
+        if(this.urls.indexOf(this.url) == -1)
+        {
+          this.urls.push(this.url);
+          await Preferences.set({key:'urls',value:JSON.stringify(this.urls)});
+        }
+      }
+      alert('gidiyoruz');
+      router.push('/iframe');
+    },
+    async getPreferences() {
+      const url = await Preferences.get({ key: 'url' });
+      const urls = await Preferences.get({key:'urls'});
+      this.url = url.value;
+
+      if(urls.value != null)
+      {
+        try
+        {
+          this.urls = JSON.parse(urls.value);
+        } catch (error) {
+          this.urls = [];          
+        }
+      }
+      else
+      {
+        this.urls = [];
+      }
+    },
+  }
+});
 </script>
 
 <style scoped>
-#container {
+.empty-list-message {
   text-align: center;
-  
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+#container {
+  text-align: center;  
   position: absolute;
   left: 0;
   right: 0;

@@ -8,7 +8,7 @@
 import { IonContent, IonPage } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { Preferences } from '@capacitor/preferences';
-import { InAppBrowser } from '@cordova-plugin-inappbrowser/inappbrowser';
+import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser';
 
 export default defineComponent({
     name: 'IFramePage',
@@ -28,12 +28,8 @@ export default defineComponent({
         async getPreferences() {
             const { value } = await Preferences.get({ key: 'url' });
 
-            InAppBrowser.create(value!.toString(),'_self',{location:'no',toolbar:'no',zoom:'no'}).then((browser: InAppBrowser) => {
-browser.show();
-});
 
-
-
+            InAppBrowser.create(value!.toString(), '_blank', {location: 'no', toolbar: 'no', zoom: 'no'});
 
             
         },

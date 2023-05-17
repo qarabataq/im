@@ -35,16 +35,13 @@
       <ion-list v-else>
         <ion-item-sliding v-for="(item, index) in items" :key="index">
           <ion-item>
-            <ion-label>{{ item.site }}</ion-label>
+            <ion-label>{{ item.name }}</ion-label>
             <ion-button @click="connect(item)" fill="outline" size="small">
               Bağlan
             </ion-button>
-            <ion-button @click="testConnection(item)" color="secondary" fill="outline" size="small">
-              Test 
-            </ion-button>
           </ion-item>
           <ion-item-options side="end">
-            <ion-item-option color="warning" @click="editItem(item)">
+            <ion-item-option @click="editItem(item)">
               <ion-icon :icon="createOutline"></ion-icon>
               Düzenle
             </ion-item-option>
@@ -62,7 +59,7 @@
       </ion-fab>
     </ion-content>
     <ion-modal :is-open="showModal" @dismiss="closeModal">
-      <new-item-form @submit="submitForm" @close="closeModal"></new-item-form>
+      <new-item-form @submit="submitForm" @close="closeModal" :initialItem="initialItem"></new-item-form>
     </ion-modal>
   </ion-page>
 </template>
@@ -74,6 +71,7 @@ import { addOutline,createOutline, trashOutline } from 'ionicons/icons';
 import NewItemForm from '@/components/NewItemForm.vue';
 import router from '@/router';
 interface Item {
+  name: string;
   site: string;
   username: string;
   password: string;
@@ -103,13 +101,34 @@ export default defineComponent({
     NewItemForm
   },
   setup(){
+
+    const editingIndex = ref(-1);
+
+
     const items = ref<Item[]>([
-      { site: 'https://test.i-frame.io', username: 'user1', password: 'pass1' },
-      { site: 'https://bd.i-frame.io', username: 'user2', password: 'pass2' }
+      { name:'test', site: 'https://test.i-frame.io', username: 'user1', password: 'pass1' },
+      { name:'bd',site: 'https://bd.i-frame.io', username: 'user2', password: 'pass2' }
     ]);
-    const editItem = (item: Item) => {
-      console.log('Düzenle:', item);
+
+    const editItem = (item: Item, index: number) => {
+      editingIndex.value = index;
+      showModal.value = true;
+      initialItem.value = { ...item };
     };
+
+    const submitForm = (newItem: Item) => {
+      if (editingIndex.value !== -1) {
+        items.value.splice(editingIndex.value, 1, newItem);
+        editingIndex.value = -1;
+      } else {
+        items.value.push(newItem);
+      }
+      closeModal();
+    };
+    
+    const initialItem = ref<Item | null>(null);
+
+
 
     const deleteItem = (index: number) => {
       items.value.splice(index, 1);
@@ -121,9 +140,6 @@ export default defineComponent({
 
     };
 
-    const testConnection = (item: Item) => {
-      console.log('Test Connection:', item);
-    };
     const addNewItem = () => {
       console.log('Yeni öğe ekle');
       showModal.value = true;
@@ -137,10 +153,6 @@ export default defineComponent({
       showModal.value = false;
     };
 
-    const submitForm = (newItem: Item) => {
-      items.value.push(newItem);
-      closeModal();
-    };
     const showDeleteConfirm = ref(false);
     const deleteIndex = ref(-1);
 
@@ -151,14 +163,14 @@ export default defineComponent({
       editItem,
       deleteItem,
       connect,
-      testConnection,
       addOutline,
       trashOutline,
       createOutline,
       addNewItem,
       showModal,
       closeModal,
-      submitForm
+      submitForm,
+      initialItem,
     };
   },
   data() {

@@ -217,7 +217,6 @@ export default defineComponent({
           await Preferences.set({key:'urls',value:JSON.stringify(this.urls)});
         }
       }
-      alert('gidiyoruz');
       router.push('/iframe');
     },
     async getPreferences() {

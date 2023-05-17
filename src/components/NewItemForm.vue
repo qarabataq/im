@@ -36,7 +36,7 @@
           <ion-input v-model="item.password" type="password"></ion-input>
         </ion-item>
       </ion-list>
-      <ion-button expand="block" @click="submitForm">Ekle</ion-button>
+      <ion-button expand="block" @click="submitForm">Kaydet</ion-button>
     </ion-content>
   </ion-page>
 </template>

@@ -8,8 +8,7 @@
     <ion-content :fullscreen="true">
       <div style="margin:20xp;padding:20px;text-align: center;display: flex; align-items: center; justify-content: center;">
         <ion-img src="/../assets/logo.png" style="width:50%;height: 50%;"></ion-img>
-      </div>
-      
+      </div>      
       <!--
       <v-row style="align-items: center;justify-content: center;">
         <v-col cols="10" style="align-items: center;justify-content: center;">
@@ -26,7 +25,6 @@
           <ion-button @click="onInput" size="small">Giriş</ion-button>
         </v-col>
       </v-row>
-
       -->
 
       <div v-if="items.length === 0" class="empty-list-message">
@@ -69,7 +67,11 @@ import {IonAlert,IonModal,IonFab,IonIcon,IonFabButton, IonList, IonItem,IonItemS
 import { defineComponent ,ref} from 'vue';
 import { addOutline,createOutline, trashOutline } from 'ionicons/icons';
 import NewItemForm from '@/components/NewItemForm.vue';
+
 import router from '@/router';
+
+
+
 interface Item {
   name: string;
   site: string;
@@ -155,6 +157,7 @@ export default defineComponent({
 
     const showDeleteConfirm = ref(false);
     const deleteIndex = ref(-1);
+
 
 
 

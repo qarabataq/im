@@ -27,11 +27,7 @@ export default defineComponent({
     methods: {
         async getPreferences() {
             const { value } = await Preferences.get({ key: 'url' });
-
-
             InAppBrowser.create(value!.toString(), '_blank', {location: 'no', toolbar: 'no', zoom: 'no'});
-
-            
         },
     }
 });

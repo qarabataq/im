@@ -111,6 +111,12 @@ export default defineComponent({
       Preferences.set({key:'items', value:JSON.stringify(items.value)});
     };
 
+    const editItem = (item: Item) => {
+      editingIndex.value = items.value.indexOf(item);
+      initialItem.value = item;
+      showModal.value = true;
+    };
+    
     const connect = async (item: Item) => {
       console.log('Bağlan:', item);
       await Preferences.set({key:'url',value:item.site});
@@ -131,6 +137,7 @@ export default defineComponent({
     return {
       items,
       deleteItem,
+      editItem,
       connect,
       addOutline,
       trashOutline,

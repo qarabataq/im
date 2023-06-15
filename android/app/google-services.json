@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1040790338200",
+    "project_id": "iframemobile",
+    "storage_bucket": "iframemobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1040790338200:android:69d860c45b9cb46852aeed",
+        "android_client_info": {
+          "package_name": "io.iframe.im"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoSmKHdLnxW-5znO4EQYXfi3CUuiDn87I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

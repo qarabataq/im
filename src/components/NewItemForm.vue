@@ -122,7 +122,7 @@ const testSite = async () => {
       alert("bağlantı başarısız.");
     }
   } catch (error) {
-    alert("baglanti başarısız.");
+    alert("bağlantı başarısız.");
   }
 };
 

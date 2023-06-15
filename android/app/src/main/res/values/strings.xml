@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">im</string>
-    <string name="title_activity_main">im</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="app_name">iFrame</string>
+    <string name="title_activity_main">iFrame</string>
+    <string name="package_name">io.iframe.im</string>
+    <string name="custom_url_scheme">io.iframe.im</string>
 </resources>

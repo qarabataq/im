@@ -44,7 +44,6 @@
   </ion-modal>  
   </ion-page>  
 </template>  
-
 <script lang="ts">  
 import { Preferences } from '@capacitor/preferences';  
 import {IonAlert,IonModal,IonFab,IonIcon,IonFabButton, IonList, IonItem,IonItemSliding,IonItemOption,IonItemOptions, IonContent, IonHeader, IonPage, IonTitle, IonToolbar,IonInput,IonButton,IonImg } from '@ionic/vue';  
@@ -52,6 +51,13 @@ import { defineComponent ,ref} from 'vue';
 import { addOutline,createOutline, trashOutline } from 'ionicons/icons';  
 import NewItemForm from '@/components/NewItemForm.vue';  
 import router from '@/router';  
+import NotificationsService from '@/services/notifications'
+
+
+
+
+
+
 
 interface Item {  
   name: string;  
@@ -82,6 +88,9 @@ export default defineComponent({
     IonImg, 
     NewItemForm,
   },  
+  created() {
+    NotificationsService.methods.initPush();
+  },
   setup() {  
     const editingIndex = ref(-1);  
     const items = ref<Item[]>([]);  
@@ -119,7 +128,8 @@ export default defineComponent({
     
     const connect = async (item: Item) => {
       console.log('Bağlan:', item);
-      await Preferences.set({key:'url',value:item.site});
+      let params = btoa(item.username+'|'+item.password+'|'+'dashboard.html?recID=747347bc-f6fc-492d-a0c9-22268cf70623');
+      await Preferences.set({key:'url',value:item.site+'/html/login.html?params='+params});
       router.push('/iframe');
     };
 
